@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title></title>
+	<style type="text/css">
+		h1 {
+			font-weight: normal;
+		}
+
+		table {
+			margin-left: 3em;
+		}
+
+		td {
+			min-width: 15em;
+		}
+	</style>
+</head>
+<body>
+	<p>
+		<h1>register.php</h1>
+		<div>Регистрация нового пользователя</div>
+		<div>Принимает: <code>{ login: "Логин", password: "Пароль", name: "Полное имя", phone: 88005553535 }</code></div>
+		<div>
+			Может вернуть:
+			<table>
+				<tr><td><code>Логин уже занят</code></td><td>В базе данных уже существует запись с таким логином</td></tr>
+				<tr><td><code>Слишком короткий пароль</code></td><td>Длина пароля составляет менее 8 символов</td></tr>
+				<tr><td><code>Успешно</code></td><td>Операция прошла успешно</td></tr>
+			</table>
+		</div>
+	</p>
+
+	<p>
+		<h1>login.php</h1>
+		<div>Авторизация</div>
+		<div>Принимает: <code>{ login: "Логин", password: "Пароль" }</code></div>
+		<div>
+			Может вернуть:
+			<table>
+				<tr><td><code>Неверный логин</code></td><td>В базе не нашлось записи с таким логином</td></tr>
+				<tr><td><code>Неверный пароль</code></td><td>Функция password_verify() вернула ошибку</td></tr>
+				<tr><td><code>Успешно</code></td><td>Операция прошла успешно</td></tr>
+			</table>
+		</div>
+	</p>
+
+	<p>
+		<h1>list_users.php</h1>
+		<div>Получить список пользователей</div>
+		<div>Требует авторизации первого уровня</div>
+		<div>Вернёт структуру следующего вида:</div>
+		<div>
+			<code>
+				[ { "id": ..., "Login": ..., "Name": ..., "Phone": ..., "Role": ... }, ... ]
+			</code>
+		</div>
+	</p>
+
+	<p>
+		<h1>list_free_users.php</h1>
+		<div>Получить список свободных пользователей по направлению</div>
+		<div>Принимает: <code>{ group: "группа" }</code></div>
+		<div>
+			Доступные группы:
+			<table>
+				<tr><td><code>emergency</code></td><td>ЧС</td></tr>
+				<tr><td><code>fire</code></td><td>Пожар</td></tr>
+				<tr><td><code>search_and_rescue</code></td><td>Поиски</td></tr>
+				<tr><td><code>material_help</code></td><td>Сбор материальной помощи</td></tr>
+				<tr><td><code>animals</code></td><td>Животные</td></tr>
+				<tr><td><code>ecology</code></td><td>Экология</td></tr>
+			</table>
+		</div>
+		<div>Вернёт структуру следующего вида:</div>
+		<div>
+			<code>
+				[ { "id": ..., "Login": ..., "Name": ..., "Phone": ..., "Role": ... }, ... ]
+			</code>
+		</div>
+	</p>
+
+	<p>
+		<h1>create_event.php</h1>
+		<div>Создание заявки</div>
+		<div>Требует базовой авторизации</div>
+		<div>Принимает: <code>{ type: "тип", description: "описание" }</code></div>
+		<div>
+			Доступные типы:
+			<table>
+				<tr><td><code>emergency</code></td><td>ЧС</td></tr>
+				<tr><td><code>fire</code></td><td>Пожар</td></tr>
+				<tr><td><code>search_and_rescue</code></td><td>Поиски</td></tr>
+				<tr><td><code>material_help</code></td><td>Сбор материальной помощи</td></tr>
+				<tr><td><code>animals</code></td><td>Животные</td></tr>
+				<tr><td><code>ecology</code></td><td>Экология</td></tr>
+			</table>
+		</div>
+		<div>Описание может быть неограниченной длины</div>
+		<div>
+			Может вернуть:
+			<table>
+				<tr><td><code>Неизвестный тип</code></td><td>Получен неизвестный тип</td></tr>
+				<tr><td><code>Успешно</code></td><td>Операция прошла успешно</td></tr>
+			</table>
+		</div>
+	</p>
+
+	<p>
+		<h1>list_inbox_events.php</h1>
+		<div>Получить список входящих (Всё ещё не принятых) заявок</div>
+		<div>Требует авторизации первого уровня</div>
+		<div>Вернёт структуру следующего вида:</div>
+		<div>
+			<code>
+				[ { "id": ..., "Type": ..., "Description": ..., "InboxTime": ..., "ReviewTime": null, "ResolvedTime": null }, ... ]
+			</code>
+		</div>
+	</p>
+
+	<p>
+		<h1>list_open_events.php</h1>
+		<div>Получить список открытых (принятых) заявок</div>
+		<div>Требует авторизации первого уровня</div>
+		<div>Вернёт структуру следующего вида:</div>
+		<div>
+			<code>
+				[ { "id": ..., "Type": ..., "Description": ..., "InboxTime": ..., "ReviewTime": ..., "ResolvedTime": null }, ... ]
+			</code>
+		</div>
+	</p>
+
+	<p>
+		<h1>list_resolved_events.php</h1>
+		<div>Получить список закрытых заявок</div>
+		<div>Требует авторизации первого уровня</div>
+		<div>Вернёт структуру следующего вида:</div>
+		<div>
+			<code>
+				[ { "id": ..., "Type": ..., "Description": ..., "InboxTime": ..., "ReviewTime": ..., "ResolvedTime": ... }, ... ]
+			</code>
+		</div>
+	</p>
+
+	<p>
+		<h1>accept_event.php</h1>
+		<div>Взять заявку</div>
+		<div>Требует авторизации первого уровня</div>
+		<div>Принимает: <code>{ event_id: ИД_заявки }</code></div>
+		<div>
+			Может вернуть:
+			<table>
+				<tr><td><code>У вас уже есть одна открытая заявка</code></td><td>У авторизованного в данный момент пользователя уже есть одна не закрытая заявка</td></tr>
+				<tr><td><code>Эта заявка уже взята или закрыта</code></td><td>Заявка уже помечена как взятая или закрытая</td></tr>
+				<tr><td><code>Не ваше направление</code></td><td>Авторизованный в данный момент пользователь отсутствует в списках контроля доступа на заданное направление</td></tr>
+				<tr><td><code>Успешно</code></td><td>Операция прошла успешно</td></tr>
+			</table>
+		</div>
+	</p>
+
+	<p>
+		<h1>resolve_event.php</h1>
+		<div>Закрыть заявку</div>
+		<div>Требует авторизации первого уровня</div>
+		<div>Принимает: <code>{ event_id: ИД_заявки }</code></div>
+		<div>
+			Может вернуть:
+			<table>
+				<tr><td><code>Вы не являетесь участником этой заявки</code></td><td>Авторизованный в данный момент пользователь отсутствует в списке участников этой заявки</td></tr>
+				<tr><td><code>Успешно</code></td><td>Операция прошла успешно</td></tr>
+			</table>
+		</div>
+	</p>
+
+	<p>
+		<h1>update_event.php</h1>
+		<div>Обновить описание заявки</div>
+		<div>Требует авторизации первого уровня</div>
+		<div>Принимает: <code>{ description: "Новое описание", event_id: ИД_заявки }</code></div>
+		<div>
+			Может вернуть:
+			<table>
+				<tr><td><code>Вы не являетесь участником этой заявки</code></td><td>Авторизованный в данный момент пользователь отсутствует в списке участников этой заявки</td></tr>
+				<tr><td><code>Успешно</code></td><td>Операция прошла успешно</td></tr>
+			</table>
+		</div>
+	</p>
+
+	<p>
+		<h1>group_add_user.php</h1>
+		<div>Добавить пользователя на направление</div>
+		<div>Требует авторизации второго уровня</div>
+		<div>Принимает: <code>{ group: "группа", user_id: ИД_пользователя }</code></div>
+		<div>
+			Доступные группы:
+			<table>
+				<tr><td><code>emergency</code></td><td>ЧС</td></tr>
+				<tr><td><code>fire</code></td><td>Пожар</td></tr>
+				<tr><td><code>search_and_rescue</code></td><td>Поиски</td></tr>
+				<tr><td><code>material_help</code></td><td>Сбор материальной помощи</td></tr>
+				<tr><td><code>animals</code></td><td>Животные</td></tr>
+				<tr><td><code>ecology</code></td><td>Экология</td></tr>
+			</table>
+		</div>
+		<div>
+			Может вернуть
+			<table>
+				<tr><td><code>Неизвестная группа</code></td><td>Получена неизвестная группа</td></tr>
+				<tr><td><code>Успешно</code></td><td>Операция прошла успешно</td></tr>
+			</table>
+		</div>
+	</p>
+
+	<p>
+		<h1>group_del_user.php</h1>
+		<div>Удалить пользователя с направления</div>
+		<div>Требует авторизации второго уровня</div>
+		<div>Принимает: <code>{ group: "группа", user_id: ИД_пользователя }</code></div>
+		<div>
+			Доступные группы:
+			<table>
+				<tr><td><code>emergency</code></td><td>ЧС</td></tr>
+				<tr><td><code>fire</code></td><td>Пожар</td></tr>
+				<tr><td><code>search_and_rescue</code></td><td>Поиски</td></tr>
+				<tr><td><code>material_help</code></td><td>Сбор материальной помощи</td></tr>
+				<tr><td><code>animals</code></td><td>Животные</td></tr>
+				<tr><td><code>ecology</code></td><td>Экология</td></tr>
+			</table>
+		</div>
+		<div>
+			Может вернуть
+			<table>
+				<tr><td><code>Неизвестная группа</code></td><td>Получена неизвестная группа</td></tr>
+				<tr><td><code>Успешно</code></td><td>Операция прошла успешно</td></tr>
+			</table>
+		</div>
+	</p>
+
+	<p>
+		<h1>event_add_user.php</h1>
+		<div>Добавить пользователя на заявку</div>
+		<div>Требует авторизации первого уровня</div>
+		<div>Принимает: <code>{ user_id: ИД_пользователя, event_id: ИД_заявки }</code></div>
+		<div>
+			Может вернуть
+			<table>
+				<tr><td><code>Пользователь занят</code></td><td>Указанный пользователь уже назначен на открытую заявку</td></tr>
+				<tr><td><code>Заявка ещё не взята или уже закрыта</code></td><td>Указанная заявка ещё никем не взята или уже закрыта</td></tr>
+				<tr><td><code>Пользователь не имеет доступа к направлению</code></td><td>Указанный пользователь отсутствует в списках контроля доступа на заданное направление</td></tr>
+				<tr><td><code>Успешно</code></td><td>Операция прошла успешно</td></tr>
+			</table>
+		</div>
+	</p>
+
+	<p>
+		<h1>event_del_user.php</h1>
+		<div>Удалить пользователя с заявки</div>
+		<div>Требует авторизации первого уровня</div>
+		<div>Принимает: <code>{ user_id: ИД_пользователя, event_id: ИД_заявки }</code></div>
+		<div>
+			Может вернуть
+			<table>
+				<tr><td><code>Заявка ещё не взята или уже закрыта</code></td><td>Указанная заявка ещё никем не взята или уже закрыта</td></tr>
+				<tr><td><code>Успешно</code></td><td>Операция прошла успешно</td></tr>
+			</table>
+		</div>
+	</p>
+
+	<p>
+		<h1>upload_file.php</h1>
+		<div>Загрузить файл в базу данных</div>
+		<div>Максимальный размер ограничен 16 МБ</div>
+		<div>Требует авторизации первого уровня</div>
+		<div><b>Принимает объект FormData</b> с полями event_id и blob; blob должен иметь тип File или Blob</div>
+		<div>Пример: <br><code>var data = new FormData()<br>data.append("event_id", ИД_заявки)<br>data.append("blob", new Blob(["Test blob blob lobbbbb blobbbbb"]) )<br>fetch("upload_file.php", {method: "POST", body: data})</code></div>
+		<div>Также можно использовать обычную HTML форму</div>
+		<div>
+			Может вернуть
+			<table>
+				<tr><td><code>Вы не являетесь участником этой заявки</code></td><td>Авторизованный в данный момент пользователь отсутствует в списке участников этой заявки</td></tr>
+				<tr><td><code>Успешно</code></td><td>Операция прошла успешно</td></tr>
+			</table>
+		</div>
+	</p>
+
+	<p>
+		<h1>download_file.php</h1>
+		<div>Скачать файл из базы данных</div>
+		<div>Требует авторизации первого уровня</div>
+		<div><b>Принимает GET-параметр</b> file_id</div>
+		<div>Пример: <code>&lt;button onclick="window.open('download_file.php?file_id=1')"&gt;Скачать&lt;/button&gt;</code></div>
+		<div>В случае успеха откроется диалог скачивания файла</div>
+		<div>
+			В противном случае может вернуть:
+			<table>
+				<tr><td><code>Вы не являетесь участником этой заявки</code></td><td>Авторизованный в данный момент пользователь отсутствует в списке участников этой заявки</td></tr>
+			</table>
+		</div>
+	</p>
+
+	<p>
+		<h1>list_event_files.php</h1>
+		<div>Получить список файлов, привязанных к заявке</div>
+		<div>Принимает: <code>{ event_id: ИД_заявки }</code></div>
+		<div>Требует авторизации первого уровня</div>
+		<div>Вернёт структуру следующего вида:</div>
+		<div>
+			<code>
+				[ { "id": ..., "Time": ..., "Name": ..., "user_id": ... }, ... ]
+			</code>
+		</div>
+		<div>
+			Также может вернуть:
+			<table>
+				<tr><td><code>Вы не являетесь участником этой заявки</code></td><td>Авторизованный в данный момент пользователь отсутствует в списке участников этой заявки</td></tr>
+			</table>
+		</div>
+	</p>
+
+	<p>
+		<h1>delete_file.php</h1>
+		<div>Удалить файл из базы данных</div>
+		<div>Принимает: <code>{ file_id: ИД_файла }</code></div>
+		<div>Требует авторизации первого уровня</div>
+		<div>
+			Может вернуть
+			<table>
+				<tr><td><code>Не ваш файл</code></td><td>Авторизованный в данный момент пользователь не является автором указанного файла</td></tr>
+				<tr><td><code>Успешно</code></td><td>Операция прошла успешно</td></tr>
+			</table>
+		</div>
+	</p>
+</body>
+</html>
